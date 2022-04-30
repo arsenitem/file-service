@@ -8,6 +8,7 @@ router.get('/', async (req: Request, res: Response) => {
     const fileDir = `${filesFolder}/${id}`;
     const img = await fs.readFileSync(fileDir);
     res.write(img); 
+    res.end();
 });
 
 router.get('/list', async (req: Request, res: Response) => {
@@ -15,12 +16,13 @@ router.get('/list', async (req: Request, res: Response) => {
     let files = fs.readdirSync(filesFolder);
     if(links === 'true') {
         const fileLinks = files.map((file) => {
-            return {id: file, link: `${req.headers.host}/file?id=${file}`};
+            return {id: file, link: `http://${req.headers.host}/file?id=${file}`};
         })
         res.json(fileLinks);
     } else {
         res.json(files);
     }
+    res.end();
 })
 
 router.get('/random', async (req: Request, res: Response) => {
@@ -28,7 +30,8 @@ router.get('/random', async (req: Request, res: Response) => {
     const randomFile = files[Math.floor(Math.random()*files.length)];
     const fileDir = `${filesFolder}/${randomFile}`;
     const img = await fs.readFileSync(fileDir);
-    res.write(img);  
+    res.write(img); 
+    res.end(); 
 });
 
 export default router;
